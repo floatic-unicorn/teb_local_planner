@@ -661,6 +661,10 @@ bool TebLocalPlannerROS::pruneGlobalPlan(const geometry_msgs::msg::PoseStamped& 
     //robot.setData( global_to_plan_transform * global_pose );
     
     double dist_thresh_sq = dist_behind_robot*dist_behind_robot;
+
+    if(global_plan.size() == 1){
+      return true;
+    }
     
     // iterate plan until a pose close the robot is found
     std::vector<geometry_msgs::msg::PoseStamped>::iterator it = global_plan.begin();
@@ -679,9 +683,7 @@ bool TebLocalPlannerROS::pruneGlobalPlan(const geometry_msgs::msg::PoseStamped& 
     }
     if (erase_end == global_plan.end())
       return false;
-    
-    if (erase_end != global_plan.begin())
-      global_plan.erase(global_plan.begin(), erase_end);
+    global_plan.erase(global_plan.begin(), erase_end);
   }
   catch (const tf2::TransformException& ex)
   {
